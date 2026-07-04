@@ -11,21 +11,6 @@
 
 ---
 
-# Table of Contents
-
-1. Introduction
-2. About Nagios Core
-3. Nagios Architecture
-4. Components of Nagios
-5. Lab Architecture
-6. Hardware Requirements
-7. Software Requirements
-8. Network Requirements
-9. RHEL 9.8 Preparation
-10. Registering the System
-
----
-
 # 1. Introduction
 
 ## What is Nagios?
