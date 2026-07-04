@@ -3156,3 +3156,2879 @@ Ready for Plugins
 ---
 
 # End of Part 2B-2
+
+# Part 3A – Installing Nagios Plugins
+
+---
+
+# 21. Installing Nagios Plugins
+
+## Objective
+
+Nagios Core itself is only a monitoring engine.
+
+It **does not directly monitor anything**.
+
+The actual monitoring is performed by **Nagios Plugins**.
+
+Without plugins, Nagios can schedule checks, but it cannot determine whether a host or service is healthy.
+
+Therefore, immediately after installing Nagios Core, the next step is to install the official Nagios Plugins package.
+
+---
+
+# What are Nagios Plugins?
+
+Nagios Plugins are small executable programs that perform monitoring tasks.
+
+Each plugin checks a particular resource and returns one of four standard status codes.
+
+```
+                Nagios Core
+                     │
+                     │ Executes
+                     ▼
+            Nagios Plugin
+                     │
+                     │ Checks
+                     ▼
+          Host / Service Status
+                     │
+                     ▼
+           Status Returned to Core
+```
+
+---
+
+## Plugin Return Codes
+
+Every plugin returns one of the following values.
+
+| Return Code | Status | Description |
+|-------------|--------|-------------|
+| 0 | OK | Everything is working normally |
+| 1 | WARNING | Resource is above warning threshold |
+| 2 | CRITICAL | Serious issue detected |
+| 3 | UNKNOWN | Plugin could not determine status |
+
+Example
+
+```
+check_ping
+
+↓
+
+PING OK
+
+↓
+
+Exit Code = 0
+```
+
+---
+
+# Common Plugins
+
+Nagios Plugins package installs many useful monitoring commands.
+
+Examples include:
+
+```
+check_ping
+
+check_http
+
+check_disk
+
+check_load
+
+check_users
+
+check_tcp
+
+check_dns
+
+check_procs
+
+check_swap
+
+check_ssh
+
+check_snmp
+
+check_ntp
+
+check_icmp
+
+check_ftp
+
+check_smtp
+
+check_pop
+
+check_imap
+
+check_tcp
+
+check_udp
+```
+
+---
+
+## Where are Plugins Installed?
+
+Default installation directory
+
+```
+/usr/local/nagios/libexec
+```
+
+Example
+
+```
+/usr/local/nagios/libexec/check_ping
+
+/usr/local/nagios/libexec/check_http
+
+/usr/local/nagios/libexec/check_disk
+```
+
+---
+
+## Plugin Workflow
+
+```
+Nagios Scheduler
+
+↓
+
+Execute Plugin
+
+↓
+
+Plugin Checks Resource
+
+↓
+
+Plugin Returns Status
+
+↓
+
+Nagios Updates Dashboard
+```
+
+---
+
+# Why Install Plugins Separately?
+
+Nagios follows a modular architecture.
+
+Advantages
+
+- Easy maintenance
+- Easy upgrades
+- Custom plugins supported
+- Lightweight core
+- Flexible monitoring
+
+---
+
+# Official Plugin Package
+
+Current Version
+
+```
+Nagios Plugins 2.5
+```
+
+Official GitHub Repository
+
+```
+https://github.com/nagios-plugins/nagios-plugins
+```
+
+---
+
+# Change to Source Directory
+
+```bash
+cd /usr/src
+```
+
+Verify
+
+```bash
+pwd
+```
+
+Expected
+
+```
+/usr/src
+```
+
+---
+
+# Download Plugins
+
+```bash
+wget -O plugins.tar.gz \
+https://github.com/nagios-plugins/nagios-plugins/releases/download/release-2.5/nagios-plugins-2.5.tar.gz
+```
+
+---
+
+# Verify Download
+
+```bash
+ls -lh plugins.tar.gz
+```
+
+Expected
+
+```
+2.6M
+```
+
+---
+
+# Verify File Type
+
+```bash
+file plugins.tar.gz
+```
+
+Expected
+
+```
+gzip compressed data
+```
+
+---
+
+## Download Directory
+
+```
+/usr/src
+
+├── nagios.tar.gz
+
+├── plugins.tar.gz
+```
+
+---
+
+# Best Practices
+
+Always download plugins from the official GitHub repository.
+
+Avoid third-party mirrors.
+
+---
+
+# 22. Understanding Nagios Plugins
+
+## Plugin Architecture
+
+```
+             Nagios Core
+                  │
+                  ▼
+            check_ping
+                  │
+                  ▼
+          ICMP Echo Request
+                  │
+                  ▼
+              Remote Host
+                  │
+                  ▼
+           ICMP Echo Reply
+                  │
+                  ▼
+              Plugin Result
+                  │
+                  ▼
+             Nagios Dashboard
+```
+
+---
+
+## Plugin Categories
+
+### Host Plugins
+
+Examples
+
+```
+check_ping
+
+check_icmp
+
+check_ssh
+
+check_tcp
+```
+
+---
+
+### Service Plugins
+
+Examples
+
+```
+check_http
+
+check_dns
+
+check_mysql
+
+check_ldap
+
+check_ftp
+```
+
+---
+
+### Resource Plugins
+
+Examples
+
+```
+check_disk
+
+check_load
+
+check_users
+
+check_swap
+
+check_procs
+```
+
+---
+
+### Network Plugins
+
+Examples
+
+```
+check_snmp
+
+check_tcp
+
+check_udp
+
+check_ntp
+```
+
+---
+
+## Plugin Naming Convention
+
+```
+check_*
+```
+
+Examples
+
+```
+check_http
+
+check_dns
+
+check_disk
+
+check_swap
+```
+
+---
+
+## Plugin Execution
+
+Nagios executes plugins exactly like Linux commands.
+
+Example
+
+```bash
+/usr/local/nagios/libexec/check_ping \
+-H 8.8.8.8
+```
+
+Possible Output
+
+```
+PING OK
+
+Packet Loss = 0%
+```
+
+---
+
+## Plugin Exit Status
+
+```
+Exit Code
+
+↓
+
+0
+
+↓
+
+OK
+```
+
+---
+
+Example
+
+```
+check_disk
+
+↓
+
+Disk Usage = 95%
+
+↓
+
+Exit Code = 2
+
+↓
+
+CRITICAL
+```
+
+---
+
+## Custom Plugins
+
+Administrators can also write their own plugins.
+
+Supported Languages
+
+```
+Bash
+
+Python
+
+Perl
+
+C
+
+Go
+
+Ruby
+```
+
+---
+
+# 23. Compiling Nagios Plugins
+
+## Objective
+
+After downloading the source code, plugins must be compiled.
+
+Compilation converts the plugin source code into executable binaries.
+
+---
+
+# Extract Plugins
+
+```bash
+tar -xzf plugins.tar.gz
+```
+
+---
+
+Verify
+
+```bash
+ls
+```
+
+Expected
+
+```
+nagios-plugins-2.5
+```
+
+---
+
+Enter Directory
+
+```bash
+cd nagios-plugins-2.5
+```
+
+---
+
+Verify
+
+```bash
+pwd
+```
+
+Expected
+
+```
+/usr/src/nagios-plugins-2.5
+```
+
+---
+
+## Configure Plugins
+
+Execute
+
+```bash
+./configure \
+--with-nagios-user=nagios \
+--with-nagios-group=nagios
+```
+
+---
+
+### Command Explanation
+
+| Option | Description |
+|----------|-------------|
+| --with-nagios-user | Plugin ownership |
+| --with-nagios-group | Plugin group |
+
+---
+
+## Why No ./tools/setup?
+
+Older documentation sometimes includes:
+
+```bash
+./tools/setup
+```
+
+This step is **obsolete** for **Nagios Plugins 2.5** and should **not** be used.
+
+The `configure` script performs the required setup.
+
+---
+
+## Verify Configure
+
+Expected Output
+
+```
+Configuration completed.
+```
+
+Near the end
+
+```
+config.status
+
+Makefile
+```
+
+---
+
+## Compile Plugins
+
+```bash
+make
+```
+
+Compilation begins.
+
+```
+gcc
+
+↓
+
+Object Files
+
+↓
+
+Executable Plugins
+```
+
+---
+
+## Example Output
+
+```
+Making all in plugins
+
+gcc
+
+check_ping
+
+check_http
+
+check_disk
+
+Compile finished
+```
+
+---
+
+## Common Errors
+
+### Error
+
+```
+No acceptable C compiler found
+```
+
+Solution
+
+```bash
+sudo dnf install gcc
+```
+
+---
+
+### Error
+
+```
+openssl headers missing
+```
+
+Solution
+
+```bash
+sudo dnf install openssl-devel
+```
+
+---
+
+### Error
+
+```
+configure: command not found
+```
+
+Ensure you are inside
+
+```
+nagios-plugins-2.5
+```
+
+---
+
+# 24. Installing Nagios Plugins
+
+## Install Plugins
+
+```bash
+make install
+```
+
+---
+
+## Installation Process
+
+```
+Compiled Plugins
+
+↓
+
+Copy to
+
+↓
+
+/usr/local/nagios/libexec
+```
+
+---
+
+Verify
+
+```bash
+ls /usr/local/nagios/libexec
+```
+
+You should see many plugin executables.
+
+Examples
+
+```
+check_ping
+
+check_http
+
+check_disk
+
+check_load
+
+check_swap
+
+check_users
+
+check_snmp
+
+check_tcp
+
+check_ssh
+```
+
+---
+
+## Installation Layout
+
+```
+/usr/local/nagios
+
+├── bin
+
+├── etc
+
+├── libexec
+
+│     ├── check_ping
+
+│     ├── check_http
+
+│     ├── check_disk
+
+│     ├── check_load
+
+│     ├── check_tcp
+
+│     └── ...
+
+├── share
+
+├── var
+```
+
+---
+
+# 25. Verifying Plugin Installation
+
+## Objective
+
+After installation, verify that plugins were correctly installed.
+
+---
+
+## Count Installed Plugins
+
+```bash
+ls /usr/local/nagios/libexec | wc -l
+```
+
+Typically
+
+```
+60+
+```
+
+plugins.
+
+---
+
+## Verify Individual Plugin
+
+Example
+
+```bash
+ls -l /usr/local/nagios/libexec/check_ping
+```
+
+Expected
+
+```
+Executable
+```
+
+---
+
+## Check Permissions
+
+```bash
+ls -l /usr/local/nagios/libexec
+```
+
+Owner
+
+```
+nagios
+
+nagios
+```
+
+---
+
+## Run Plugin Manually
+
+Example
+
+```bash
+/usr/local/nagios/libexec/check_ping \
+-H 8.8.8.8
+```
+
+Expected
+
+```
+PING OK
+```
+
+---
+
+## Check HTTP Plugin
+
+```bash
+/usr/local/nagios/libexec/check_http \
+-H google.com
+```
+
+Expected
+
+```
+HTTP OK
+```
+
+---
+
+## Check Disk Plugin
+
+```bash
+/usr/local/nagios/libexec/check_disk \
+-w 20% \
+-c 10% \
+-p /
+```
+
+Expected
+
+```
+DISK OK
+```
+
+---
+
+## Plugin Verification Checklist
+
+Verify
+
+- ✅ Plugins downloaded
+- ✅ Plugins extracted
+- ✅ Configure completed
+- ✅ Compilation successful
+- ✅ Installation successful
+- ✅ Plugins copied to libexec
+- ✅ Plugins executable
+- ✅ Manual execution successful
+
+---
+
+## Common Troubleshooting
+
+### Permission denied
+
+```bash
+chmod +x plugin_name
+```
+
+---
+
+### Plugin not found
+
+Verify installation directory.
+
+```
+/usr/local/nagios/libexec
+```
+
+---
+
+### Plugin returns UNKNOWN
+
+Run plugin manually to view the exact error message.
+
+---
+
+## End of Part 3A
+
+# Part 3B-1 – Web Authentication, Apache Configuration and SELinux
+
+---
+
+# 26. Creating the Web Authentication User
+
+## Objective
+
+Nagios uses **Apache Basic Authentication** to protect the web interface.
+
+Without authentication, anyone who knows the server IP address could access your monitoring dashboard.
+
+For this reason, Nagios requires a valid username and password before allowing access.
+
+---
+
+# Authentication Workflow
+
+```
+                User Browser
+                     │
+                     ▼
+            http://server/nagios
+                     │
+                     ▼
+              Apache Web Server
+                     │
+        Is User Authenticated?
+              │             │
+             No             Yes
+              │              │
+              ▼              ▼
+ Authentication Popup   Nagios Dashboard
+              │
+              ▼
+      Verify Username
+              │
+              ▼
+      Verify Password
+              │
+              ▼
+       htpasswd.users File
+```
+
+---
+
+## What is Basic Authentication?
+
+Basic Authentication is an HTTP authentication mechanism provided by Apache.
+
+When a user visits the Nagios URL:
+
+```
+http://<server-ip>/nagios
+```
+
+Apache immediately prompts for a username and password.
+
+Only authenticated users can access the Nagios dashboard.
+
+---
+
+## Authentication File
+
+Nagios stores usernames and encrypted passwords in:
+
+```
+/usr/local/nagios/etc/htpasswd.users
+```
+
+Passwords are **never stored in plain text**.
+
+Example
+
+```
+nagiosadmin:$apr1$g2u4...
+```
+
+---
+
+# Why Use htpasswd?
+
+Apache provides the `htpasswd` utility to securely create and manage authentication users.
+
+It automatically hashes passwords using secure algorithms.
+
+---
+
+## Verify htpasswd
+
+```bash
+which htpasswd
+```
+
+Expected
+
+```
+/usr/bin/htpasswd
+```
+
+If not found
+
+```bash
+sudo dnf install httpd-tools
+```
+
+---
+
+# Create Web User
+
+Execute
+
+```bash
+htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+```
+
+---
+
+## Command Explanation
+
+| Option | Meaning |
+|----------|---------|
+| -c | Create new password file |
+| htpasswd.users | Password database |
+| nagiosadmin | Username |
+
+---
+
+Example
+
+```
+New password:
+
+Re-type new password:
+
+Adding password for user nagiosadmin
+```
+
+---
+
+# Verify User
+
+```bash
+cat /usr/local/nagios/etc/htpasswd.users
+```
+
+Example
+
+```
+nagiosadmin:$apr1$.....
+```
+
+---
+
+## Add Another User
+
+Do **NOT** use `-c`.
+
+Instead
+
+```bash
+htpasswd /usr/local/nagios/etc/htpasswd.users operator
+```
+
+Using `-c` again deletes existing users.
+
+---
+
+## Change Password
+
+```bash
+htpasswd /usr/local/nagios/etc/htpasswd.users nagiosadmin
+```
+
+---
+
+## Delete User
+
+```bash
+htpasswd -D \
+/usr/local/nagios/etc/htpasswd.users \
+nagiosadmin
+```
+
+---
+
+## Authentication File Permissions
+
+Verify
+
+```bash
+ls -l /usr/local/nagios/etc/htpasswd.users
+```
+
+Expected
+
+```
+-rw-r-----
+```
+
+---
+
+# Best Practice
+
+Create individual accounts for administrators instead of sharing one account.
+
+Example
+
+```
+admin
+
+operator
+
+network
+
+storage
+
+linux
+```
+
+---
+
+# 27. Configuring Apache
+
+## Objective
+
+Apache provides the web interface for Nagios.
+
+Without Apache, the dashboard cannot be accessed through a web browser.
+
+---
+
+# Apache Architecture
+
+```
+Browser
+
+↓
+
+Apache HTTP Server
+
+↓
+
+Nagios CGI
+
+↓
+
+Nagios Core
+
+↓
+
+Status Information
+```
+
+---
+
+## Apache Configuration File
+
+Installed during
+
+```
+make install-webconf
+```
+
+Location
+
+```
+/etc/httpd/conf.d/nagios.conf
+```
+
+---
+
+## Verify Configuration File
+
+```bash
+ls /etc/httpd/conf.d/nagios.conf
+```
+
+---
+
+## View Configuration
+
+```bash
+less /etc/httpd/conf.d/nagios.conf
+```
+
+---
+
+## Important Directives
+
+### ScriptAlias
+
+```
+ScriptAlias /nagios/cgi-bin
+```
+
+Defines CGI directory.
+
+---
+
+### Alias
+
+```
+Alias /nagios
+```
+
+Defines web interface directory.
+
+---
+
+### AuthUserFile
+
+```
+AuthUserFile /usr/local/nagios/etc/htpasswd.users
+```
+
+Specifies the authentication database.
+
+---
+
+### AuthType
+
+```
+AuthType Basic
+```
+
+Enables HTTP Basic Authentication.
+
+---
+
+### Require
+
+```
+Require valid-user
+```
+
+Only authenticated users may access Nagios.
+
+---
+
+# Verify Apache Configuration
+
+Execute
+
+```bash
+apachectl configtest
+```
+
+Expected
+
+```
+Syntax OK
+```
+
+---
+
+# If Syntax Fails
+
+Example
+
+```
+Syntax error
+
+Line 45
+```
+
+Correct the configuration before restarting Apache.
+
+---
+
+# Reload Apache Configuration
+
+```bash
+systemctl reload httpd
+```
+
+---
+
+# Restart Apache
+
+```bash
+systemctl restart httpd
+```
+
+---
+
+# Enable Apache at Boot
+
+```bash
+systemctl enable httpd
+```
+
+---
+
+# Verify Apache Status
+
+```bash
+systemctl status httpd
+```
+
+Expected
+
+```
+Active: active (running)
+```
+
+---
+
+# Verify Listening Port
+
+```bash
+ss -tlnp | grep :80
+```
+
+Expected
+
+```
+LISTEN
+
+0.0.0.0:80
+```
+
+---
+
+# Test Web Server
+
+Open browser
+
+```
+http://server-ip
+```
+
+Apache test page should appear.
+
+---
+
+# Common Apache Problems
+
+## Port Already In Use
+
+```
+Address already in use
+```
+
+Find process
+
+```bash
+ss -tlnp | grep :80
+```
+
+---
+
+## Syntax Error
+
+```
+apachectl configtest
+```
+
+Always returns
+
+```
+Syntax OK
+```
+
+before restarting Apache.
+
+---
+
+## Authentication Loop
+
+Browser repeatedly asks for password.
+
+Check
+
+```
+AuthUserFile
+
+htpasswd.users
+
+Permissions
+```
+
+---
+
+# Apache Workflow
+
+```
+Client Request
+
+↓
+
+Apache
+
+↓
+
+Authenticate User
+
+↓
+
+Nagios CGI
+
+↓
+
+Nagios Core
+
+↓
+
+Dashboard
+```
+
+---
+
+# 28. Configuring SELinux
+
+## Objective
+
+SELinux (Security-Enhanced Linux) provides mandatory access control for Linux systems.
+
+RHEL enables SELinux by default.
+
+Improper SELinux configuration can prevent Apache and Nagios from functioning correctly.
+
+---
+
+# Verify SELinux Mode
+
+```bash
+getenforce
+```
+
+Possible Results
+
+```
+Enforcing
+
+Permissive
+
+Disabled
+```
+
+Recommended
+
+```
+Enforcing
+```
+
+---
+
+# Check Detailed Status
+
+```bash
+sestatus
+```
+
+Example
+
+```
+SELinux status: enabled
+
+Current mode: enforcing
+```
+
+---
+
+# Why Configure SELinux?
+
+Nagios requires Apache to communicate with several directories.
+
+Without proper SELinux policies
+
+```
+Permission denied
+```
+
+errors may occur.
+
+---
+
+# Allow Apache Network Connections
+
+```bash
+setsebool -P httpd_can_network_connect 1
+```
+
+---
+
+## Command Explanation
+
+| Option | Meaning |
+|----------|----------|
+| setsebool | Change SELinux Boolean |
+| -P | Permanent |
+| httpd_can_network_connect | Allow Apache outbound connections |
+
+---
+
+# Verify Boolean
+
+```bash
+getsebool httpd_can_network_connect
+```
+
+Expected
+
+```
+on
+```
+
+---
+
+# Restore Security Contexts
+
+```bash
+restorecon -Rv /usr/local/nagios
+```
+
+---
+
+Restore Apache
+
+```bash
+restorecon -Rv /etc/httpd
+```
+
+---
+
+# Verify Context
+
+```bash
+ls -Zd /usr/local/nagios
+```
+
+Displays
+
+```
+SELinux Context
+```
+
+---
+
+# Common SELinux Commands
+
+View Booleans
+
+```bash
+getsebool -a
+```
+
+---
+
+Temporarily Disable (Testing Only)
+
+```bash
+setenforce 0
+```
+
+---
+
+Enable Again
+
+```bash
+setenforce 1
+```
+
+---
+
+⚠ **Never disable SELinux permanently on production servers.**
+
+Always resolve policy issues instead.
+
+---
+
+# Troubleshooting SELinux
+
+## Apache Forbidden
+
+If browser displays
+
+```
+403 Forbidden
+```
+
+Verify
+
+```
+getenforce
+
+restorecon
+
+httpd_can_network_connect
+```
+
+---
+
+## Audit Logs
+
+```bash
+ausearch -m avc -ts recent
+```
+
+Displays recent SELinux denials.
+
+---
+
+## Best Practices
+
+✔ Keep SELinux enabled
+
+✔ Use SELinux Booleans instead of disabling SELinux
+
+✔ Restore contexts after installation
+
+✔ Review audit logs if access is denied
+
+---
+
+# Verification Checklist
+
+Verify
+
+✅ Web user created
+
+```bash
+cat /usr/local/nagios/etc/htpasswd.users
+```
+
+---
+
+✅ Apache configuration exists
+
+```bash
+ls /etc/httpd/conf.d/nagios.conf
+```
+
+---
+
+✅ Apache syntax valid
+
+```bash
+apachectl configtest
+```
+
+---
+
+✅ Apache running
+
+```bash
+systemctl status httpd
+```
+
+---
+
+✅ SELinux enabled
+
+```bash
+getenforce
+```
+
+---
+
+✅ httpd_can_network_connect enabled
+
+```bash
+getsebool httpd_can_network_connect
+```
+
+---
+
+## End of Part 3B-1
+
+# Part 3B-2 – Firewalld Configuration, Starting Nagios Services, Verification and First Login
+
+---
+
+# 29. Configuring Firewalld
+
+## Objective
+
+Firewalld is the default firewall management service in Red Hat Enterprise Linux 9.
+
+Even if Nagios and Apache are installed correctly, users cannot access the web interface unless HTTP or HTTPS traffic is allowed through the firewall.
+
+This section explains how to configure Firewalld securely for Nagios.
+
+---
+
+# What is Firewalld?
+
+Firewalld is a dynamic firewall manager that uses zones to define trust levels for network connections.
+
+Unlike traditional iptables, Firewalld allows firewall rules to be added or removed without restarting the firewall service.
+
+---
+
+## Firewalld Architecture
+
+```
+                Internet
+                    │
+                    ▼
+            Firewalld Service
+                    │
+        -------------------------
+        │                       │
+     Allow                 Block
+        │                       │
+        ▼                       ▼
+   Apache (80/443)      Unauthorized Traffic
+```
+
+---
+
+# Check Firewalld Status
+
+```bash
+systemctl status firewalld
+```
+
+Expected Output
+
+```
+Active: active (running)
+```
+
+---
+
+# Start Firewalld
+
+If Firewalld is not running:
+
+```bash
+systemctl start firewalld
+```
+
+---
+
+# Enable Firewalld at Boot
+
+```bash
+systemctl enable firewalld
+```
+
+---
+
+# Check Current Firewall Rules
+
+```bash
+firewall-cmd --list-all
+```
+
+Example Output
+
+```
+services:
+ssh dhcpv6-client
+```
+
+---
+
+# Allow HTTP
+
+```bash
+firewall-cmd --permanent --add-service=http
+```
+
+---
+
+## Command Explanation
+
+| Option | Meaning |
+|----------|----------|
+| --permanent | Save rule permanently |
+| --add-service | Add predefined service |
+| http | Open TCP Port 80 |
+
+---
+
+# Allow HTTPS
+
+```bash
+firewall-cmd --permanent --add-service=https
+```
+
+---
+
+# Reload Firewall
+
+```bash
+firewall-cmd --reload
+```
+
+Expected Output
+
+```
+success
+```
+
+---
+
+# Verify Configuration
+
+```bash
+firewall-cmd --list-services
+```
+
+Expected
+
+```
+cockpit dhcpv6-client http https ssh
+```
+
+---
+
+# Open NRPE Port (Optional)
+
+If monitoring remote Linux servers using NRPE:
+
+```bash
+firewall-cmd --permanent --add-port=5666/tcp
+```
+
+Reload
+
+```bash
+firewall-cmd --reload
+```
+
+---
+
+# Open SNMP (Optional)
+
+```bash
+firewall-cmd --permanent --add-service=snmp
+```
+
+Reload
+
+```bash
+firewall-cmd --reload
+```
+
+---
+
+# Remove a Rule
+
+```bash
+firewall-cmd --permanent --remove-service=http
+```
+
+Reload
+
+```bash
+firewall-cmd --reload
+```
+
+---
+
+# Verify Listening Ports
+
+```bash
+ss -tlnp
+```
+
+Expected
+
+```
+80
+
+443
+```
+
+---
+
+# Common Firewalld Commands
+
+View Zones
+
+```bash
+firewall-cmd --get-active-zones
+```
+
+---
+
+View Default Zone
+
+```bash
+firewall-cmd --get-default-zone
+```
+
+---
+
+List All Rules
+
+```bash
+firewall-cmd --list-all
+```
+
+---
+
+# Common Problems
+
+## Browser Cannot Connect
+
+Check
+
+```
+firewalld running
+
+HTTP allowed
+
+Apache running
+```
+
+---
+
+## Firewall Not Running
+
+Start
+
+```bash
+systemctl start firewalld
+```
+
+---
+
+## Rule Missing After Reboot
+
+Always use
+
+```
+--permanent
+```
+
+followed by
+
+```
+firewall-cmd --reload
+```
+
+---
+
+# Best Practices
+
+✔ Keep Firewalld enabled
+
+✔ Allow only required services
+
+✔ Remove unused ports
+
+✔ Use predefined services whenever possible
+
+---
+
+# 30. Starting Nagios Services
+
+## Objective
+
+After installation, Nagios and Apache must be started and enabled so they automatically start after every system reboot.
+
+---
+
+# Reload Systemd
+
+Whenever a new service file is installed:
+
+```bash
+systemctl daemon-reload
+```
+
+---
+
+# Enable Nagios
+
+```bash
+systemctl enable nagios
+```
+
+Expected
+
+```
+Created symlink...
+```
+
+---
+
+# Enable Apache
+
+```bash
+systemctl enable httpd
+```
+
+---
+
+# Start Apache
+
+```bash
+systemctl start httpd
+```
+
+---
+
+# Start Nagios
+
+```bash
+systemctl start nagios
+```
+
+---
+
+# Restart Both Services
+
+```bash
+systemctl restart httpd
+systemctl restart nagios
+```
+
+---
+
+# Check Apache Status
+
+```bash
+systemctl status httpd
+```
+
+Expected
+
+```
+Active: active (running)
+```
+
+---
+
+# Check Nagios Status
+
+```bash
+systemctl status nagios
+```
+
+Expected
+
+```
+Active: active (running)
+```
+
+---
+
+# Verify Service Startup
+
+```bash
+systemctl is-enabled httpd
+```
+
+Expected
+
+```
+enabled
+```
+
+---
+
+```bash
+systemctl is-enabled nagios
+```
+
+Expected
+
+```
+enabled
+```
+
+---
+
+# Verify Nagios Configuration
+
+Before starting Nagios, always validate the configuration.
+
+```bash
+/usr/local/nagios/bin/nagios \
+-v \
+/usr/local/nagios/etc/nagios.cfg
+```
+
+---
+
+## Expected Output
+
+```
+Things look okay.
+
+No serious problems were detected.
+```
+
+If errors are reported, fix them before starting the service.
+
+---
+
+# Understanding the Verification Process
+
+Nagios checks:
+
+- Main configuration file
+- Object definitions
+- Host definitions
+- Service definitions
+- Contact definitions
+- Command definitions
+- Time periods
+- File permissions
+
+---
+
+# Verify Running Process
+
+Nagios
+
+```bash
+ps -ef | grep nagios
+```
+
+Apache
+
+```bash
+ps -ef | grep httpd
+```
+
+---
+
+# Verify Listening Port
+
+```bash
+ss -tlnp | grep :80
+```
+
+Expected
+
+```
+LISTEN
+0.0.0.0:80
+```
+
+---
+
+# Verify Nagios Binary
+
+```bash
+/usr/local/nagios/bin/nagios -V
+```
+
+Expected
+
+```
+Nagios Core 4.5.13
+```
+
+---
+
+# First Login
+
+Open a browser.
+
+```
+http://SERVER-IP/nagios
+```
+
+Example
+
+```
+http://192.168.199.128/nagios
+```
+
+---
+
+# Authentication Window
+
+The browser displays an authentication popup.
+
+Enter:
+
+```
+Username
+
+nagiosadmin
+```
+
+Password
+
+```
+Your Password
+```
+
+---
+
+# Dashboard
+
+After successful authentication, the Nagios home page appears.
+
+You should see:
+
+```
+Nagios Core 4.5.13
+
+Process Information
+
+Current Status
+
+Service Status
+
+Host Status
+```
+
+---
+
+# Verify Localhost Monitoring
+
+Navigate to
+
+```
+Current Status
+
+↓
+
+Hosts
+```
+
+Expected
+
+```
+localhost
+
+UP
+```
+
+---
+
+Navigate to
+
+```
+Current Status
+
+↓
+
+Services
+```
+
+Example
+
+```
+Current Load
+
+Current Users
+
+Disk Usage
+
+HTTP
+
+PING
+
+Swap Usage
+```
+
+---
+
+# Understanding Default Checks
+
+Nagios installs sample monitoring for localhost.
+
+These checks include:
+
+| Service | Description |
+|----------|-------------|
+| Current Load | CPU load |
+| Current Users | Logged-in users |
+| Disk Usage | Root filesystem |
+| HTTP | Apache availability |
+| PING | ICMP reachability |
+| Total Processes | Running processes |
+| Swap Usage | Swap utilization |
+
+---
+
+# Common Startup Problems
+
+## Nagios Service Fails
+
+Run
+
+```bash
+journalctl -u nagios
+```
+
+---
+
+## Apache Fails
+
+```bash
+journalctl -u httpd
+```
+
+---
+
+## Browser Shows 403 Forbidden
+
+Verify
+
+```
+SELinux
+
+Apache Configuration
+
+Permissions
+```
+
+---
+
+## Authentication Keeps Appearing
+
+Verify
+
+```
+htpasswd.users
+
+AuthUserFile
+
+Apache Restart
+```
+
+---
+
+## Browser Cannot Connect
+
+Check
+
+```
+Apache running
+
+Firewall
+
+Correct IP Address
+```
+
+---
+
+## Configuration Error
+
+Always verify before restarting.
+
+```bash
+/usr/local/nagios/bin/nagios \
+-v \
+/usr/local/nagios/etc/nagios.cfg
+```
+
+---
+
+# Installation Verification Checklist
+
+Verify:
+
+✅ Apache installed
+
+✅ Nagios installed
+
+✅ Plugins installed
+
+✅ Firewall configured
+
+✅ SELinux configured
+
+✅ Services running
+
+✅ Configuration valid
+
+✅ Browser accessible
+
+✅ Login successful
+
+✅ Localhost monitored
+
+---
+
+# End of Part 3B-2
+
+---
+
+# Part 4 – Understanding Nagios Configuration Files
+
+---
+
+# 31. Understanding Nagios Configuration Files
+
+## Objective
+
+Nagios stores all of its monitoring settings in **configuration files (`.cfg`)**. These files define what Nagios monitors, how often checks are performed, which plugins are executed, and who receives notifications.
+
+Without these configuration files, Nagios has no information about the infrastructure it should monitor.
+
+The primary configuration directory is:
+
+```text
+/usr/local/nagios/etc/
+```
+
+Main configuration files include:
+
+```text
+nagios.cfg
+cgi.cfg
+resource.cfg
+objects/
+```
+
+---
+
+## Configuration File Hierarchy
+
+```text
+/usr/local/nagios/etc
+│
+├── nagios.cfg          # Main configuration file
+├── cgi.cfg             # Web interface configuration
+├── resource.cfg        # Resource variables
+└── objects/            # Monitoring object definitions
+```
+
+---
+
+# 32. Directory Structure Explained
+
+After installation, Nagios is installed under:
+
+```text
+/usr/local/nagios/
+```
+
+Directory layout:
+
+```text
+/usr/local/nagios
+│
+├── bin/
+├── etc/
+├── include/
+├── libexec/
+├── sbin/
+├── share/
+└── var/
+```
+
+---
+
+## Directory Explanation
+
+| Directory | Purpose |
+|-----------|---------|
+| **bin** | Contains the Nagios executable (`nagios`) |
+| **etc** | Stores all configuration files |
+| **include** | Header files used during compilation |
+| **libexec** | Stores all Nagios plugins |
+| **sbin** | CGI programs used by the web interface |
+| **share** | HTML, CSS, JavaScript, and images |
+| **var** | Log files, status information, runtime data |
+
+---
+
+## Important Directories
+
+### bin/
+
+Contains the Nagios executable.
+
+Example:
+
+```bash
+/usr/local/nagios/bin/nagios
+```
+
+---
+
+### etc/
+
+Stores configuration files.
+
+Examples:
+
+```text
+nagios.cfg
+cgi.cfg
+resource.cfg
+objects/
+```
+
+---
+
+### libexec/
+
+Contains monitoring plugins.
+
+Examples:
+
+```text
+check_ping
+check_http
+check_disk
+check_load
+check_tcp
+```
+
+---
+
+### share/
+
+Contains web interface resources.
+
+Examples:
+
+- Images
+- CSS
+- HTML
+- JavaScript
+
+---
+
+### var/
+
+Stores runtime information.
+
+Examples:
+
+```text
+nagios.log
+status.dat
+objects.cache
+```
+
+---
+
+# 33. Understanding `nagios.cfg`
+
+## What is nagios.cfg?
+
+`nagios.cfg` is the **main configuration file** for Nagios Core.
+
+It tells Nagios:
+
+- Which configuration files to load
+- Where logs are stored
+- Where plugins are located
+- Which object definitions should be read
+- Runtime settings
+
+Location:
+
+```text
+/usr/local/nagios/etc/nagios.cfg
+```
+
+---
+
+## View the File
+
+```bash
+less /usr/local/nagios/etc/nagios.cfg
+```
+
+---
+
+## Important Parameters
+
+### Log File
+
+```cfg
+log_file=/usr/local/nagios/var/nagios.log
+```
+
+Specifies where Nagios writes its log messages.
+
+---
+
+### Object Directory
+
+```cfg
+cfg_dir=/usr/local/nagios/etc/objects
+```
+
+Tells Nagios to load every configuration file from the `objects` directory.
+
+---
+
+### Command File
+
+```cfg
+command_file=/usr/local/nagios/var/rw/nagios.cmd
+```
+
+Used by the web interface to send commands to the Nagios daemon.
+
+Examples:
+
+- Schedule downtime
+- Acknowledge alerts
+- Restart checks
+
+---
+
+### Status File
+
+```cfg
+status_file=/usr/local/nagios/var/status.dat
+```
+
+Stores the current status of all hosts and services.
+
+---
+
+### State Retention
+
+```cfg
+retain_state_information=1
+```
+
+Allows Nagios to remember the previous state after a restart.
+
+---
+
+## Why is nagios.cfg Important?
+
+Think of `nagios.cfg` as the **master configuration file**.
+
+It tells Nagios where every other configuration file is located.
+
+---
+
+# 34. Understanding `cgi.cfg`
+
+## What is cgi.cfg?
+
+`cgi.cfg` controls the Nagios **web interface**.
+
+It defines:
+
+- Authentication
+- User permissions
+- Administrative access
+- Read-only access
+
+Location:
+
+```text
+/usr/local/nagios/etc/cgi.cfg
+```
+
+---
+
+## View File
+
+```bash
+less /usr/local/nagios/etc/cgi.cfg
+```
+
+---
+
+## Important Parameters
+
+### Main Administrator
+
+```cfg
+authorized_for_system_information=nagiosadmin
+```
+
+Allows the specified user to view system information.
+
+---
+
+### Configuration Access
+
+```cfg
+authorized_for_configuration_information=nagiosadmin
+```
+
+Allows viewing configuration through the web interface.
+
+---
+
+### Service Commands
+
+```cfg
+authorized_for_all_service_commands=nagiosadmin
+```
+
+Allows:
+
+- Restart checks
+- Disable notifications
+- Schedule downtime
+
+---
+
+### Host Commands
+
+```cfg
+authorized_for_all_host_commands=nagiosadmin
+```
+
+Allows host-related administrative actions.
+
+---
+
+## How Authentication Works
+
+```
+Browser
+
+↓
+
+Apache Authentication
+
+↓
+
+htpasswd.users
+
+↓
+
+cgi.cfg Permissions
+
+↓
+
+Nagios Dashboard
+```
+
+---
+
+# 35. Understanding `resource.cfg`
+
+## What is resource.cfg?
+
+`resource.cfg` stores reusable variables and sensitive information.
+
+Instead of hardcoding passwords in plugins, Nagios references variables stored in this file.
+
+Location:
+
+```text
+/usr/local/nagios/etc/resource.cfg
+```
+
+---
+
+## View File
+
+```bash
+less /usr/local/nagios/etc/resource.cfg
+```
+
+---
+
+## Common Variables
+
+### USER1
+
+```cfg
+$USER1$=/usr/local/nagios/libexec
+```
+
+Points to the Nagios plugins directory.
+
+Example:
+
+```cfg
+command_line $USER1$/check_ping
+```
+
+Instead of writing:
+
+```cfg
+/usr/local/nagios/libexec/check_ping
+```
+
+Nagios replaces `$USER1$` automatically.
+
+---
+
+### USER2
+
+Example:
+
+```cfg
+$USER2$=public
+```
+
+Can store an SNMP community string.
+
+---
+
+### USER3
+
+Example:
+
+```cfg
+$USER3$=database_password
+```
+
+Can store database credentials.
+
+---
+
+## Why Use Variables?
+
+Benefits:
+
+- Avoid hardcoding passwords
+- Easier maintenance
+- Reusable configuration
+- Improved security
+
+---
+
+## Example
+
+Instead of:
+
+```cfg
+command_line /usr/local/nagios/libexec/check_snmp -C public
+```
+
+Use:
+
+```cfg
+command_line $USER1$/check_snmp -C $USER2$
+```
+
+This makes future password changes much easier.
+
+---
+
+# Summary
+
+| File | Purpose |
+|------|---------|
+| **nagios.cfg** | Main Nagios configuration |
+| **cgi.cfg** | Web interface permissions |
+| **resource.cfg** | Variables and credentials |
+| **objects/** | Hosts, services, contacts, commands |
+
+---
+
+## Configuration Relationship
+
+```text
+                nagios.cfg
+                     │
+        ┌────────────┼────────────┐
+        │            │            │
+        ▼            ▼            ▼
+   cgi.cfg     resource.cfg    objects/
+                                    │
+                    ┌───────────────┼────────────────┐
+                    ▼               ▼                ▼
+              commands.cfg    contacts.cfg    localhost.cfg
+```
+
+---
+
+## Best Practices
+
+- Keep configuration files backed up.
+- Do not store plain-text passwords in command definitions.
+- Use `resource.cfg` for sensitive variables.
+- Validate changes before restarting Nagios:
+
+```bash
+/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+```
+
+A successful validation should end with:
+
+```text
+Things look okay - No serious problems were detected during the pre-flight check.
+```
+
+---
+
+## End of Part 4A
