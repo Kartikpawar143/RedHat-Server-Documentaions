@@ -1380,6 +1380,7 @@ Example
 ```
 2.5M
 ```
+<img width="728" height="292" alt="image" src="https://github.com/user-attachments/assets/d4115975-98dd-48b7-a37f-3c32da21c777" />
 
 ---
 
@@ -1573,6 +1574,7 @@ Example
 ```
 /usr/src/nagioscore-nagios-4.5.13
 ```
+<img width="1312" height="146" alt="image" src="https://github.com/user-attachments/assets/a4455bcc-6154-47c5-9f89-a76e5f56eeaf" />
 
 ---
 
@@ -2036,6 +2038,8 @@ Runs the configuration script.
 
 Specifies the group allowed to execute external Nagios commands.
 
+<img width="467" height="652" alt="image" src="https://github.com/user-attachments/assets/b97c19c9-6de9-49da-95ab-c26416b97339" />
+
 ---
 
 ## What Happens Internally?
@@ -2409,6 +2413,7 @@ Execute
 ```bash
 make all
 ```
+<img width="960" height="635" alt="image" src="https://github.com/user-attachments/assets/d674b958-2efe-44c0-8bfe-5736416f2928" />
 
 ---
 
@@ -2705,6 +2710,7 @@ Execute
 ```bash
 make install
 ```
+<img width="578" height="645" alt="image" src="https://github.com/user-attachments/assets/9c9cd614-51f8-4f45-bb85-c3cf729c9748" />
 
 ---
 
@@ -2753,6 +2759,7 @@ into
 ```bash
 make install-init
 ```
+<img width="642" height="47" alt="image" src="https://github.com/user-attachments/assets/6c15f26e-2502-4956-859d-5353f434cfff" />
 
 Purpose
 
@@ -2783,6 +2790,7 @@ nagios.service
 ```bash
 make install-config
 ```
+<img width="897" height="281" alt="image" src="https://github.com/user-attachments/assets/1c8d1e46-c74a-480f-a0fa-9eafdc577026" />
 
 Copies sample configuration files into
 
@@ -2819,6 +2827,7 @@ ls /usr/local/nagios/etc
 ```bash
 make install-commandmode
 ```
+<img width="476" height="81" alt="image" src="https://github.com/user-attachments/assets/9046dbd9-1580-4353-8616-734c7d85fb71" />
 
 Purpose
 
@@ -2863,6 +2872,7 @@ nagios nagcmd
 ```bash
 make install-webconf
 ```
+<img width="572" height="102" alt="image" src="https://github.com/user-attachments/assets/3b0257cd-b4e4-4adc-b761-e3f2367f8fad" />
 
 Purpose
 
