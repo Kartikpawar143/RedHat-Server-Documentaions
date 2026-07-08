@@ -819,6 +819,7 @@ net-snmp-utils \
 net-snmp-perl \
 policycoreutils-python-utils
 ```
+<img width="630" height="711" alt="image" src="https://github.com/user-attachments/assets/31d9e2e9-de70-42d6-8593-705f0381a4e5" />
 
 ---
 
