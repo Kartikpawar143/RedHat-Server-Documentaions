@@ -3373,6 +3373,7 @@ Expected
 wget -O plugins.tar.gz \
 https://github.com/nagios-plugins/nagios-plugins/releases/download/release-2.5/nagios-plugins-2.5.tar.gz
 ```
+<img width="1536" height="362" alt="image" src="https://github.com/user-attachments/assets/d54e182c-ee8a-4166-ba27-2ddf9a308b80" />
 
 ---
 
@@ -3658,6 +3659,7 @@ Enter Directory
 ```bash
 cd nagios-plugins-2.5
 ```
+<img width="658" height="96" alt="image" src="https://github.com/user-attachments/assets/3acecc95-dcbc-4555-9f85-3db82e69f3de" />
 
 ---
 
@@ -3684,6 +3686,7 @@ Execute
 --with-nagios-user=nagios \
 --with-nagios-group=nagios
 ```
+<img width="543" height="616" alt="image" src="https://github.com/user-attachments/assets/24fbfd30-7352-4448-b445-0d44bc17fc03" />
 
 ---
 
