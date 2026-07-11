@@ -68,11 +68,12 @@ sudo dnf install cockpit cockpit-storaged cockpit-packagekit -y
 
 ---
 
-# Step 4: Enable and Start Cockpit
+# Step 4: Start and Enable Cockpit
 
 Enable the Cockpit socket so it starts automatically after every reboot.
 
 ```bash
+sudo systemctl start cockpit.socket
 sudo systemctl enable --now cockpit.socket
 ```
 
@@ -83,8 +84,6 @@ sudo systemctl enable --now cockpit.socket
 Check whether Cockpit is running.
 
 ```bash
-sudo systemctl start cockpit.socket
-sudo systemctl enable cockpit.socket
 sudo systemctl status cockpit.socket
 ```
 
